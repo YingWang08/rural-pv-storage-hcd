@@ -1,6 +1,6 @@
 # Rural PV Storage HCD Framework – Reproducibility Package
 
-[![DOI](https://img.shields.io/badge/DOI-10.6084/m9.figshare.31883080-blue)](https://doi.org/10.6084/m9.figshare.31883080)
+[![DOI](https://img.shields.io/badge/DOI-10.6084/m9.figshare.31989261-blue)](https://doi.org/10.6084/m9.figshare.31989261)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 This repository contains the complete code, parameters, and supplementary materials for the Scientific Reports submission:
