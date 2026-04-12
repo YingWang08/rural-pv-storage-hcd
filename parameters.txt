@@ -1,0 +1,124 @@
+# =============================================================================
+# Core Parameters for Reproducibility
+# Title: A Public-Data-Driven Human-Centered Framework for Rural Household
+#        Photovoltaic Energy Storage: Methodological Development and Simulation
+# Corresponds to Scientific Reports submission (2026)
+# =============================================================================
+
+# --------------------------
+# 1. Basic Simulation Settings
+# --------------------------
+Simulation duration: 15 months (hourly time‑series basis)
+Primary time step: 1 minute (1 second for transient events)
+Random seed: 42 (fixed for reproducibility)
+Simulation platform:
+  - Python 3.11
+  - Pandapower 2.14.0
+  - SciPy 1.11.4
+  - Scikit-fuzzy 0.4.2
+Hardware target (MCU validation):
+  - STM32F103C8T6 (72 MHz, 20 KB RAM)
+
+# --------------------------
+# 2. PV & Energy Storage System Parameters
+# --------------------------
+PV array capacity: 5 kWp
+Energy storage capacity: 10 kWh (LiFePO4)
+System voltage: DC 48 V
+Charge/discharge rate: 0.5 C
+SOC operating range: 20% – 80%
+Conservative SOC lower limit (during pattern change): 22%
+Voltage deviation allowance: ±7%
+Total harmonic distortion (THD): ≤5%
+
+# --------------------------
+# 3. Human‑Centred Evaluation Indices (Equations 1–4)
+# --------------------------
+Composite Human‑Centered Score (H_sim):
+  H_sim = 0.45·D_sim + 0.30·C_target + 0.25·P_target
+
+# 3.1 Cognitive Suitability Index (C_target)
+C_target = 0.4·(1 − (S−1)/(S_max−1)) + 0.3·(1 − K/K_max) + 0.3·(T/T_max)
+  S = average operation steps (target ≤3)
+  S_max = 12 (industry benchmark)
+  K = NASA‑TLX cognitive load (target = 40)
+  K_max = 100
+  T = automatic misoperation correction rate (target = 100%)
+  T_max = 100%
+  Sub‑weights: w_S = 0.4, w_K = 0.3, w_T = 0.3
+
+# 3.2 Demand Matching Index (D_sim) – computed directly from simulation
+D_sim = Σ min(P_actual,i, P_expected,i) / Σ P_expected,i · α_i
+  Priority weights α_i:
+    - Peak agricultural period: 1.5
+    - Normal period: 1.0
+    - Low‑demand period: 0.5
+
+# 3.3 Subject Participation Index (P_target) – design target
+P_target = 0.4·(E/100) + 0.3·(τ_std/τ_actual) + 0.3·(R/100)
+  E = user‑defined strategy execution success rate (%)
+  τ_std = 2 s (benchmark response time)
+  τ_actual = actual response time (s)
+  R = demand response participation rate (%)
+
+# --------------------------
+# 4. Fuzzy Logic Model (Load Prediction & Control Rules)
+# --------------------------
+Type: Mamdani fuzzy inference system
+Input variables: 4
+  - Agricultural season (categorical)
+  - Time of day (categorical)
+  - Farmer type (categorical)
+  - Horizontal irradiance (continuous, W/m²)
+Membership functions: triangular
+Number of core linguistic rules: 25
+Coverage rate of electricity scenarios: 95.3%
+Implementation:
+  - Single‑step prediction time on STM32: 186 ms
+  - Peak RAM usage: 27.4 KB
+  - Average R²: 0.932
+  - Mean Absolute Percentage Error (MAPE): 10.8%
+
+# Representative fuzzy rule (Table 6):
+# IF Busy Season AND Morning AND High Irradiance THEN Production_High
+
+# --------------------------
+# 5. Multi‑Objective Control Strategy (Equation 5)
+# --------------------------
+Objective function (maximise):
+  max J = 0.42·D_sim + 0.35·(E_self / E_total) + 0.23·(1 − N_cycle,eq / N_rated)
+
+  D_sim      : demand matching index
+  E_self     : self‑consumed PV energy (kWh)
+  E_total    : total PV generation (kWh)
+  N_cycle,eq : equivalent full charge‑discharge cycles
+  N_rated    : rated cycle life of battery
+
+Safety constraints:
+  - SOC: 20% – 80%
+  - Charge/discharge power: 0 – 5 kW
+  - Grid voltage: 220 V ± 7%
+Weights determined via gradient sensitivity analysis (12 test sets).
+
+# --------------------------
+# 6. Data Preprocessing & Scenario Parameters
+# --------------------------
+Missing value imputation: same‑type period average (0.21%–0.43% missing)
+Outlier removal: 3σ principle (0.28%–0.45% replaced)
+Resampling error: ≤0.3%
+Spatio‑temporal alignment error (agricultural season): ≤0.5%
+
+Archetypal operating conditions (48‑hour simulations):
+  - Busy season + Sunny
+  - Busy season + Rainy
+  - Slack season + Sunny
+  - Slack season + Rainy
+
+# --------------------------
+# 7. Key Performance Targets (as reported in manuscript)
+# --------------------------
+Average annual energy generation loss: ~3.06%
+Composite human‑centered score (HCD Framework): 0.88 ± 0.03 (s.d.)
+Operational resilience (R): 0.92 (HCD) vs. 0.47 (traditional)
+Demand matching advantage: 0.90 (HCD) vs. 0.68 (traditional)
+PV self‑consumption rate (HCD): 93.5% ± 0.4%

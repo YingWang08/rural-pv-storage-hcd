@@ -1,19 +1,25 @@
-# Rural Household Photovoltaic Energy Storage - Human-Centred Design
-Code and Data Scripts for HCIS Manuscript
+# Rural PV Storage HCD Framework – Reproducibility Package
 
-## Overview
-This repository provides the full reproducible code for the manuscript:
-**People-Centered Design of Rural Household Photovoltaic Energy Storage Based on Public Datasets**
+[![DOI](https://img.shields.io/badge/DOI-10.6084/m9.figshare.31883080-blue)](https://doi.org/10.6084/m9.figshare.31883080)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-## Included Files
-- Main simulation code
-- ERA5-Land meteorological data download script
-- NREL PVDAQ PV validation data download script
-- Simulated household load data for Ganluo County, Sichuan
-- Core parameters and runtime instructions
+This repository contains the complete code, parameters, and supplementary materials for the Scientific Reports submission:
 
-## Data Notice
-Raw large public datasets are not included but can be reproduced using the provided scripts.
+> **A Public-Data-Driven Human-Centered Framework for Rural Household Photovoltaic Energy Storage: Methodological Development and Simulation**
 
-## License
-MIT
+## 📋 Requirements
+
+- Python 3.11
+- Pandapower 2.14.0
+- SciPy 1.11.4
+- Scikit-fuzzy 0.4.2
+- (see `code/data_download/requirements.txt` for additional dependencies)
+
+## 🚀 Quick Start
+
+### 1. Clone and set up environment
+
+```bash
+git clone https://github.com/YingWang08/rural-pv-storage-hcd.git
+cd rural-pv-storage-hcd
+pip install -r code/data_download/requirements.txt
